@@ -1,5 +1,7 @@
-# Specifics
-dist-cjs/*
+# Specifics to exclude from packaging
+.*
+src-cjs
+src-tests
 
 # Logs
 logs

@@ -1,0 +1,50 @@
+{
+    "name": "config-helper-for-pulsar-by-sporniket",
+    "version": "0.0.1",
+    "description": "NPM library to help an extension to manage a set of configuration settings.",
+    "main": "dist-cjs/config-helper-for-pulsar.js",
+    "module": "src/config-helper-for-pulsar.js",
+    "exports": {
+        ".": {
+            "import": "./src/config-helper-for-pulsar.js",
+            "require": "./dist-cjs/config-helper-for-pulsar.js"
+        }
+    },
+    "scripts": {
+        "_format-package-json": "prettier -w package.json",
+        "_format-src": "eslint --fix src/*.js",
+        "_format-src-tests": "eslint --fix src-tests/*.?js",
+        "format": "npm run _format-package-json && npm run _format-src && npm run _format-src-tests",
+        "_build-cjs-copy-resources": "cp src-cjs/* dist-cjs",
+        "_build-cjs-transpile": "babel --plugins @babel/plugin-transform-modules-commonjs src --out-dir dist-cjs",
+        "build-cjs": "npm run _build-cjs-transpile && npm run _build-cjs-copy-resources",
+        "rebuild-cjs": "rm -f dist-cjs/* && npm run build-cjs",
+        "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config=.jest.config.cjs",
+        "prepack": "npm run rebuild-cjs"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/sporniket/config-helper-for-pulsar.git"
+    },
+    "keywords": [
+        "configuration"
+    ],
+    "author": "David SPORN",
+    "license": "GPL-3.0-or-later",
+    "bugs": {
+        "url": "https://github.com/sporniket/config-helper-for-pulsar/issues"
+    },
+    "homepage": "https://github.com/sporniket/config-helper-for-pulsar#readme",
+    "devDependencies": {
+        "@babel/cli": "^7.26.4",
+        "@babel/core": "^7.26.10",
+        "@babel/preset-env": "^7.26.9",
+        "babel": "^6.23.0",
+        "eslint": "^8.0.0",
+        "jest": "^29.7.0",
+        "prettier": "^3.5.3"
+    },
+    "dependencies": {
+        "config-loader-base-by-sporniket": "^0.1.0"
+    }
+}
