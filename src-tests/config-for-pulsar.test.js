@@ -29,13 +29,42 @@ const pulsar = {
                 this._subscribersOfDidChange.get(settingName)({newValue, oldValue}) ;
             }
         },
+        reset: function() {
+            this._settings = new Map([['c.a','value of c.a'],['c.b','value of c.b']]);
+        }
     }
 };
 
-const onDidChangeA = jest.fn()
-const onDidChangeB = jest.fn()
+beforeEach(() => {
+    pulsar.config.reset();
+})
 
-test('loadAndWatchSettingsFromPulsar should load configuration and setup watchers for changes', () => {
+test('loadAndWatchSettingsFromPulsar should return configuration that receive changes', () => {
+    const settings = config.loadAndWatchSettingsFromPulsar(pulsar, 'c', {a:undefined, b:undefined});
+    expect(settings).toEqual(
+        {
+            a:{key:'c.a', value:'value of c.a', subscription:'subscription of c.a'},
+            b:{key:'c.b', value:'value of c.b', subscription:'subscription of c.b'},
+        }
+    );
+
+    // change setting a
+    pulsar.config.change('c.a','a new value for c.a');
+    expect(settings.a.value).toBe('a new value for c.a');
+    expect(settings.b.value).toBe('value of c.b');
+    // ---
+
+    // change setting b
+    pulsar.config.change('c.b','a new value for c.b');
+    expect(settings.a.value).toBe('a new value for c.a');
+    expect(settings.b.value).toBe('a new value for c.b');
+    // ---
+});
+
+test('loadAndWatchSettingsFromPulsar should load configuration that call notify given handler for a setting.', () => {
+    const onDidChangeA = jest.fn()
+    const onDidChangeB = jest.fn()
+
     const settings = config.loadAndWatchSettingsFromPulsar(pulsar, 'c', {a: onDidChangeA, b: onDidChangeB});
     expect(settings).toEqual(
         {
