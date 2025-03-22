@@ -68,8 +68,6 @@ function createHandlerOfDidChange(settingName, settingNameForPulsar, settingsWat
  *   d: {key:'my.extension.prefix.d', value:'the value', subscription:disposable},
  * }
  * ```
- *
- *
  */
 export function loadAndWatchSettingsFromPulsar(pulsar, prefixOfSettingNamesForPulsar, handlersBySettingName) {
     const settings = config.loadConfigurationMap(Object.getOwnPropertyNames(handlersBySettingName), createConfigValueFromPulsarLoader(pulsar), config.createKeyPrefixer(prefixOfSettingNamesForPulsar));
@@ -82,4 +80,23 @@ export function loadAndWatchSettingsFromPulsar(pulsar, prefixOfSettingNamesForPu
         };
     });
     return settingsWatchingForChanges;
+}
+
+/**
+ * Takes the settings returned by 'loadAndWatchSettingsFromPulsar', dispose of each setting after disposing of its subscription for did change.
+ *
+ * Typical use :
+ *
+ * ```javascript
+ * const settings = loadAndWatchSettingsFromPulsar(...);
+ *
+ * ...
+ * disposeSettings(settings);
+ * ```
+ */
+export function disposeSettings(settings) {
+    for (const setting in settings) {
+        settings[setting].subscription.dispose();
+        delete settings[setting];
+    }
 }
