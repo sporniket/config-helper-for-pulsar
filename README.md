@@ -12,7 +12,7 @@ Content
 
 ## 1. What is **Config helper for pulsar**, and when to use it ?
 
-**Config helper for pulsar** is a NPM library to help an extension to manage a set of configuration settings.
+**Config helper for pulsar** is a NPM library to help an extension for [Pulsar, a Community-led Hyper-Hackable Text Editor](https://pulsar-edit.dev/) to manage a set of configuration settings.
 
 Typical use
 
