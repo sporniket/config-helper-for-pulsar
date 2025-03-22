@@ -17,20 +17,25 @@ function createConfigValueFromPulsarLoader(pulsar) {
     return (key) => pulsar.config.get(key);
 }
 
-function createHandlerOfDidChange(key, cache, onDidChange = (key, newValue, oldValue, map) => {}) {
+function createHandlerOfDidChange(settingName, settingNameForPulsar, settingsWatchingForChanges, onDidChange = (key, newValue, oldValue, settings) => {}) {
     return ({
         newValue,
         oldValue
     }) => {
-        cache.get(key).set('value', newValue);
-        onDidChange(key, newValue, oldValue, map);
+        settingsWatchingForChanges[settingName].value = newValue;
+        onDidChange(settingName, newValue, oldValue, settingsWatchingForChanges);
     };
 }
 
-export function loadAndWatchSettingsFromPulsar(pulsar, keys, prefix, onDidChange = (key, newValue, oldValue, map) => {}) {
-    const settings = config.loadConfigurationMap(keys, createConfigValueFromPulsarLoader(pulsar), config.createKeyPrefixer(prefix));
+export function loadAndWatchSettingsFromPulsar(pulsar, prefixOfSettingNamesForPulsar, handlersBySettingName) {
+    const settings = config.loadConfigurationMap(Object.getOwnPropertyNames(handlersBySettingName), createConfigValueFromPulsarLoader(pulsar), config.createKeyPrefixer(prefixOfSettingNamesForPulsar));
+    const settingsWatchingForChanges = {};
     settings.forEach((value, key, map) => {
-        map.get(key).set('subscription', pulsar.config.onDidChange(key, createHandlerOfDidChange(key, map, onDidChange)));
+        settingsWatchingForChanges[key] = {
+            key: value.get('key'),
+            value: value.get('value'),
+            subscription: pulsar.config.onDidChange(value.get('key'), createHandlerOfDidChange(key, value.get('key'), settingsWatchingForChanges, handlersBySettingName[key]))
+        };
     });
-    return settings;
+    return settingsWatchingForChanges;
 }
