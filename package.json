@@ -13,7 +13,7 @@
     "scripts": {
         "_format-package-json": "prettier -w package.json",
         "_format-src": "eslint --fix src/*.js",
-        "_format-src-tests": "eslint --fix src-tests/*.?js",
+        "_format-src-tests": "eslint --fix src-tests/*.js",
         "format": "npm run _format-package-json && npm run _format-src && npm run _format-src-tests",
         "_build-cjs-copy-resources": "cp src-cjs/* dist-cjs",
         "_build-cjs-transpile": "babel --plugins @babel/plugin-transform-modules-commonjs src --out-dir dist-cjs",

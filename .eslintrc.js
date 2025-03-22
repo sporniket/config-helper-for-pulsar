@@ -1,7 +1,7 @@
 module.exports = {
     "env": {
         "node": true,
-        "es6": true
+        "es2022": true,
     },
     "extends": "eslint:recommended",
     "parserOptions": {
@@ -19,7 +19,8 @@ module.exports = {
         "it": true,
         "expect": true,
         "test": true,
-        "jest": true
+        "jest": true,
+        "beforeEach": true
     },
     "rules": {
         "no-caller": "error",
@@ -46,7 +47,7 @@ module.exports = {
         "no-spaced-func": "error",
         "no-trailing-spaces": "error",
         "no-undef-init": "error",
-        "no-underscore-dangle": "error",
+        "no-underscore-dangle": "off",
         "no-unused-expressions": "error",
         "no-unused-vars": "warn",
         "no-use-before-define": "error",
@@ -54,7 +55,7 @@ module.exports = {
         "camelcase": "error",
         "comma-spacing": "error",
         "consistent-return": "error",
-        "curly": ["error", "multi-or-nest", "consistent"],
+        "curly": [2],
         "dot-notation": ["error", { "allowKeywords": true }],
         "eol-last": ["error", "always"],
         "eqeqeq": "error",

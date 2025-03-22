@@ -23,8 +23,9 @@ function createHandlerOfDidChange(settingName, settingNameForPulsar, settingsWat
         oldValue
     }) => {
         settingsWatchingForChanges[settingName].value = newValue;
-        if(onDidChange)
-        onDidChange(settingName, newValue, oldValue, settingsWatchingForChanges);
+        if (onDidChange){
+            onDidChange(settingName, newValue, oldValue, settingsWatchingForChanges);
+        }
     };
 }
 
@@ -73,7 +74,7 @@ function createHandlerOfDidChange(settingName, settingNameForPulsar, settingsWat
 export function loadAndWatchSettingsFromPulsar(pulsar, prefixOfSettingNamesForPulsar, handlersBySettingName) {
     const settings = config.loadConfigurationMap(Object.getOwnPropertyNames(handlersBySettingName), createConfigValueFromPulsarLoader(pulsar), config.createKeyPrefixer(prefixOfSettingNamesForPulsar));
     const settingsWatchingForChanges = {};
-    settings.forEach((value, key, map) => {
+    settings.forEach((value, key) => {
         settingsWatchingForChanges[key] = {
             key: value.get('key'),
             value: value.get('value'),
